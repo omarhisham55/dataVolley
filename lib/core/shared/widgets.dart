@@ -12,10 +12,19 @@ class SharedWidgets {
         text: text,
       );
 
-  static Widget filledButton(String text, Function() onPressed) =>
+  static Widget filledButton(
+    String text,
+    Function() onPressed, {
+    double? width,
+    double? height,
+    EdgeInsets? margin,
+  }) =>
       ButtonImageFb1(
         text: text,
         onPressed: onPressed,
+        width: width,
+        height: height,
+        margin: margin,
       );
   static Widget hintTextField({
     required BuildContext context,
@@ -134,54 +143,61 @@ class InvertedButtonFb2 extends StatelessWidget {
 class ButtonImageFb1 extends StatelessWidget {
   final String text;
   final Function() onPressed;
-  const ButtonImageFb1({required this.text, required this.onPressed, Key? key})
-      : super(key: key);
-
+  final double? width;
+  final double? height;
+  final EdgeInsets? margin;
+  const ButtonImageFb1({
+    super.key,
+    required this.text,
+    required this.onPressed,
+    this.height,
+    this.width = double.infinity,
+    this.margin = const EdgeInsets.all(0),
+  });
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 200,
-      child: Container(
-        margin: const EdgeInsets.only(top: 40),
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              offset: const Offset(0, 4),
-              color: const Color(0xFF4960F9).withOpacity(.3),
-              spreadRadius: 4,
-              blurRadius: 50,
-            )
-          ],
+    return Container(
+      width: width,
+      height: height,
+      margin: margin,
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            offset: const Offset(0, 4),
+            color: const Color(0xFF4960F9).withOpacity(.3),
+            spreadRadius: 4,
+            blurRadius: 50,
+          )
+        ],
+      ),
+      child: MaterialButton(
+        onPressed: onPressed,
+        padding: EdgeInsets.zero,
+        splashColor: MainColors.splashButtonColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
         ),
-        child: MaterialButton(
-          onPressed: onPressed,
-          splashColor: MainColors.splashButtonColor,
-          shape: RoundedRectangleBorder(
+        child: Ink(
+          decoration: BoxDecoration(
+            //gradient:
+            image: const DecorationImage(
+              image: NetworkImage(
+                  "https://firebasestorage.googleapis.com/v0/b/flutterbricks-public.appspot.com/o/finance_app_2%2FbuttonBackgroundSmall.png?alt=media&token=fa2f9bba-120a-4a94-8bc2-f3adc2b58a73"),
+              fit: BoxFit.cover,
+            ),
             borderRadius: BorderRadius.circular(24),
           ),
-          padding: const EdgeInsets.all(0.0),
-          child: Ink(
-            decoration: BoxDecoration(
-              //gradient:
-              image: const DecorationImage(
-                image: NetworkImage(
-                    "https://firebasestorage.googleapis.com/v0/b/flutterbricks-public.appspot.com/o/finance_app_2%2FbuttonBackgroundSmall.png?alt=media&token=fa2f9bba-120a-4a94-8bc2-f3adc2b58a73"),
-                fit: BoxFit.cover,
-              ),
-              borderRadius: BorderRadius.circular(24),
+          child: Container(
+            constraints: const BoxConstraints(
+              minWidth: 88.0,
+              minHeight: 36.0,
             ),
-            child: Container(
-              constraints: const BoxConstraints(
-                minWidth: 88.0,
-                minHeight: 36.0,
-              ),
-              alignment: Alignment.center,
-              child: Text(
-                text,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w300,
-                ),
+            alignment: Alignment.center,
+            child: Text(
+              text,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w300,
               ),
             ),
           ),

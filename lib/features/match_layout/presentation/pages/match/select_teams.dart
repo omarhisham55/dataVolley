@@ -22,7 +22,7 @@ class SelectTeams extends StatelessWidget {
           top: Radius.circular(24),
         ),
         minHeight: 0,
-        maxHeight: 260,
+        maxHeight: 240,
         body: _bodyContent(manager),
         panelBuilder: (sc) => _buildPanel(manager),
       ),
@@ -39,27 +39,54 @@ class SelectTeams extends StatelessWidget {
             ),
             builder: (context) {
               return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SelectTeamDropdown(
-                    labelText: 'Home Team',
-                    hintText: 'choose home team',
-                    onChanged: (value) {},
-                    items: manager.combinedLevels!,
+                  Expanded(
+                    flex: 2,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SelectTeamDropdown(
+                          labelText: 'Home Team',
+                          hintText: 'choose home team',
+                          onChanged: (value) {},
+                          items: manager.combinedLevels!,
+                        ),
+                        SelectTeamDropdown(
+                          labelText: 'Away Team',
+                          hintText: 'choose away team',
+                          onChanged: (value) {},
+                          items: manager.combinedLevels!,
+                        ),
+                        SharedWidgets.filledButton(
+                          "Create new team",
+                          () => manager.createNewTeamPanelController.isAttached
+                              ? manager.createNewTeamPanelController
+                                      .isPanelClosed
+                                  ? manager.createNewTeamPanelController.open()
+                                  : manager.createNewTeamPanelController.close()
+                              : null,
+                          width: 200,
+                          margin: const EdgeInsets.only(top: 30),
+                        ),
+                      ],
+                    ),
                   ),
-                  SelectTeamDropdown(
-                    labelText: 'Away Team',
-                    hintText: 'choose away team',
-                    onChanged: (value) {},
-                    items: manager.combinedLevels!,
-                  ),
-                  SharedWidgets.filledButton(
-                    "Create new team",
-                    () => manager.createNewTeamPanelController.isAttached
-                        ? manager.createNewTeamPanelController.isPanelClosed
-                            ? manager.createNewTeamPanelController.open()
-                            : manager.createNewTeamPanelController.close()
-                        : null,
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SharedWidgets.filledButton(
+                          'Start Match',
+                          () => null,
+                          margin: const EdgeInsets.only(
+                            top: 40,
+                            left: 10,
+                            right: 10,
+                          ),
+                          height: 50,
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               );

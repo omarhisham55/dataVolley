@@ -69,6 +69,8 @@ class CreateNewTeamPanel extends StatelessWidget {
                           manager.level.isNotEmpty
                       ? manager.createTeam()
                       : null,
+                  width: 200,
+                  margin: const EdgeInsets.only(top: 30),
                 ),
                 fallback: (context) => const Center(
                   child: CircularProgressIndicator.adaptive(),
