@@ -11,12 +11,15 @@ class AppEntry extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: GestureDetector(
+          onTap: () => FirebaseConsumer.logout(),
+          child: const Icon(Icons.logout),
+        ),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 20),
             child: GestureDetector(
-              // onTap: () => Constants.goTo(context, Routes.allTeams),
-              onTap: () => FirebaseConsumer.logout(),
+              onTap: () => Constants.goTo(context, Routes.allTeams),
               child: const Icon(Icons.people),
             ),
           ),

@@ -37,7 +37,7 @@ class CreateNewTeamPanel extends StatelessWidget {
                     child: SharedWidgets.hintTextField(
                       context: context,
                       hintText: 'Enter team name',
-                      controller: manager.createNewTeamNameController,
+                      controller: manager.teamNameController,
                       keyboardType: TextInputType.name,
                       validate: (value) =>
                           value!.isEmpty ? 'Enter team name' : null,

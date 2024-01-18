@@ -21,11 +21,12 @@ class MatchLayoutCubit extends Cubit<MatchLayoutState> {
   static MatchLayoutCubit get(context) => BlocProvider.of(context);
   final GlobalKey<FormState> createNewTeamFormKey = GlobalKey<FormState>();
   final PanelController createNewTeamPanelController = PanelController();
-  final TextEditingController createNewTeamNameController =
+  final TextEditingController teamNameController =
       TextEditingController();
+  final PanelController editTeamPanelController = PanelController();
   String level = "";
   Map<String, List<TeamModel>> allTeams = {};
-  late List<String> levels = allTeams.keys.toList();
+  late List<String> levels = ['15', '17', '19', '1st'];
   List<TeamModel>? combinedLevels;
 
   TeamModel? homeTeam;
@@ -35,7 +36,7 @@ class MatchLayoutCubit extends Cubit<MatchLayoutState> {
     emit(CreateTeamLoadingState());
     final response = await createTeamUsecase(
       TeamModel(
-        name: createNewTeamNameController.text,
+        name: teamNameController.text,
         level: level,
         color: TeamColorPicker.color,
       ),
