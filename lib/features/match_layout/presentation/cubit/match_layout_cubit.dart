@@ -1,3 +1,4 @@
+import 'package:data_volley_match/core/shared/constants.dart';
 import 'package:data_volley_match/core/shared/usecases.dart';
 import 'package:data_volley_match/features/match_layout/data/models/team_model.dart';
 import 'package:data_volley_match/features/match_layout/domain/usecases/team_usecases.dart';
@@ -26,6 +27,9 @@ class MatchLayoutCubit extends Cubit<MatchLayoutState> {
   Map<String, List<TeamModel>> allTeams = {};
   late List<String> levels = allTeams.keys.toList();
   List<TeamModel>? combinedLevels;
+
+  TeamModel? homeTeam;
+  TeamModel? awayTeam;
 
   Future<void> createTeam() async {
     emit(CreateTeamLoadingState());
@@ -60,5 +64,16 @@ class MatchLayoutCubit extends Cubit<MatchLayoutState> {
         },
       ),
     );
+  }
+
+  bool checkBeforeMatchStart() {
+    if (homeTeam == null || awayTeam == null) {
+      Constants.showToast(msg: 'No Teams Found!', color: Colors.amber);
+      return false;
+    } else if (homeTeam == awayTeam) {
+      Constants.showToast(msg: 'Same Teams!', color: Colors.amber);
+      return false;
+    }
+    return true;
   }
 }

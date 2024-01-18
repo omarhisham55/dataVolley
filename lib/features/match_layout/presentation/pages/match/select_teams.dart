@@ -1,4 +1,6 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
+import 'package:data_volley_match/config/routes/routes.dart';
+import 'package:data_volley_match/core/shared/constants.dart';
 import 'package:data_volley_match/core/shared/widgets.dart';
 import 'package:data_volley_match/core/utils/colors.dart';
 import 'package:data_volley_match/features/match_layout/presentation/cubit/match_layout_cubit.dart';
@@ -48,13 +50,13 @@ class SelectTeams extends StatelessWidget {
                         SelectTeamDropdown(
                           labelText: 'Home Team',
                           hintText: 'choose home team',
-                          onChanged: (value) {},
+                          onChanged: (value) => manager.homeTeam = value,
                           items: manager.combinedLevels!,
                         ),
                         SelectTeamDropdown(
                           labelText: 'Away Team',
                           hintText: 'choose away team',
-                          onChanged: (value) {},
+                          onChanged: (value) => manager.awayTeam = value,
                           items: manager.combinedLevels!,
                         ),
                         SharedWidgets.filledButton(
@@ -77,7 +79,9 @@ class SelectTeams extends StatelessWidget {
                       children: [
                         SharedWidgets.filledButton(
                           'Start Match',
-                          () => null,
+                          () => manager.checkBeforeMatchStart()
+                              ? Constants.goTo(context, Routes.startMatch)
+                              : null,
                           margin: const EdgeInsets.only(
                             top: 40,
                             left: 10,

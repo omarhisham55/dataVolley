@@ -1,7 +1,7 @@
 import 'package:data_volley_match/config/routes/routes.dart';
 import 'package:data_volley_match/core/shared/widgets.dart';
 import 'package:data_volley_match/core/utils/strings.dart';
-import 'package:data_volley_match/features/match_layout/presentation/pages/match_entry/match_entry.dart';
+import 'package:data_volley_match/features/match_layout/presentation/pages/app_entry/app_entry.dart';
 import 'package:data_volley_match/features/registration/presentation/cubit/registration_cubit.dart';
 import 'package:data_volley_match/features/registration/presentation/widgets/account_form.dart';
 import 'package:easy_rich_text/easy_rich_text.dart';
@@ -79,7 +79,7 @@ class CreateAccount extends StatelessWidget {
               ),
             );
           }
-          return const MatchEntry();
+          return const AppEntry();
         }
 
         return const CircularProgressIndicator();

@@ -4,8 +4,8 @@ import 'package:data_volley_match/core/shared/constants.dart';
 import 'package:data_volley_match/features/match_layout/presentation/widgets/start_container.dart';
 import 'package:flutter/material.dart';
 
-class MatchEntry extends StatelessWidget {
-  const MatchEntry({super.key});
+class AppEntry extends StatelessWidget {
+  const AppEntry({super.key});
 
   @override
   Widget build(BuildContext context) {

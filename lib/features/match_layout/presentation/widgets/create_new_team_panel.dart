@@ -59,7 +59,7 @@ class CreateNewTeamPanel extends StatelessWidget {
                 onChanged: (value) {
                   manager.level = value!;
                 },
-                items: const ['15', '17', '19', '1st'],
+                items: manager.levels,
               ),
               ConditionalBuilder(
                 condition: state is! CreateTeamLoadingState,
