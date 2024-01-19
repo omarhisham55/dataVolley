@@ -104,3 +104,14 @@ class DeleteTeamErrorState extends MatchLayoutState {
   @override
   List<Object> get props => [error];
 }
+
+class AddImageSuccessState extends MatchLayoutState {}
+
+class AddImageErrorState extends MatchLayoutState {
+  final String error;
+
+  const AddImageErrorState({required this.error});
+
+  @override
+  List<Object> get props => [error];
+}

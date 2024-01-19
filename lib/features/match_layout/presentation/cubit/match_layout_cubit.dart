@@ -2,7 +2,8 @@ import 'package:data_volley_match/core/shared/constants.dart';
 import 'package:data_volley_match/core/shared/usecases.dart';
 import 'package:data_volley_match/core/utils/colors.dart';
 import 'package:data_volley_match/features/match_layout/data/models/team_model.dart';
-import 'package:data_volley_match/features/match_layout/domain/usecases/team_usecases.dart';
+import 'package:data_volley_match/features/match_layout/domain/usecases/image/image_usecase.dart';
+import 'package:data_volley_match/features/match_layout/domain/usecases/team/team_usecases.dart';
 import 'package:data_volley_match/features/match_layout/presentation/widgets/team_color_picker.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -15,10 +16,12 @@ class MatchLayoutCubit extends Cubit<MatchLayoutState> {
   final CreateTeamUsecase createTeamUsecase;
   final GetTeamsUsecase getTeamsUsecase;
   final DeleteTeamUsecase deleteTeamsUsecase;
+  final ImageUsecase imageUsecase;
   MatchLayoutCubit({
     required this.createTeamUsecase,
     required this.getTeamsUsecase,
     required this.deleteTeamsUsecase,
+    required this.imageUsecase,
   }) : super(MatchLayoutInitial());
 
   static MatchLayoutCubit get(context) => BlocProvider.of(context);
@@ -37,6 +40,7 @@ class MatchLayoutCubit extends Cubit<MatchLayoutState> {
   TeamModel? homeTeam;
   TeamModel? awayTeam;
 
+  //* Team CRUD methods
   Future<void> createTeam() async {
     emit(CreateTeamLoadingState());
     final response = await createTeamUsecase(
@@ -73,6 +77,8 @@ class MatchLayoutCubit extends Cubit<MatchLayoutState> {
     );
   }
 
+  Future<void> editTeam() async {}
+
   Future<void> deleteTeam() async {
     emit(DeleteTeamLoadingState());
     final response = await deleteTeamsUsecase(selectedTeam);
@@ -86,6 +92,18 @@ class MatchLayoutCubit extends Cubit<MatchLayoutState> {
     );
   }
 
+  //* Images
+  Future<void> addTeamImage(TeamModel team) async {
+    final response = await imageUsecase(team);
+    emit(
+      response.fold(
+        (l) => AddImageErrorState(error: l.props.toString()),
+        (r) => AddImageSuccessState(),
+      ),
+    );
+  }
+
+  //* handle edit panel
   double editPanelMaxHeight = 160;
   bool isEditClicked = false;
   late TeamModel selectedTeam;
@@ -104,6 +122,7 @@ class MatchLayoutCubit extends Cubit<MatchLayoutState> {
     emit(OpenEditTeam(isEditClicked));
   }
 
+  //* checking teams avavilability
   bool checkBeforeMatchStart() {
     if (homeTeam == null || awayTeam == null) {
       Constants.showToast(

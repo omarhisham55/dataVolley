@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
 import 'package:data_volley_match/config/error/failure.dart';
-import 'package:data_volley_match/features/match_layout/data/datasources/team_datasource.dart';
+import 'package:data_volley_match/features/match_layout/data/datasources/team/team_datasource.dart';
 import 'package:data_volley_match/features/match_layout/data/models/team_model.dart';
-import 'package:data_volley_match/features/match_layout/domain/repositories/team_repository.dart';
+import 'package:data_volley_match/features/match_layout/domain/repositories/team/team_repository.dart';
 
 class TeamRepositoryImpl implements TeamRepository {
   final TeamDatasource teamDatasource;
