@@ -1,5 +1,6 @@
 import 'package:data_volley_match/core/shared/constants.dart';
 import 'package:data_volley_match/core/shared/usecases.dart';
+import 'package:data_volley_match/core/utils/colors.dart';
 import 'package:data_volley_match/features/match_layout/data/models/team_model.dart';
 import 'package:data_volley_match/features/match_layout/domain/usecases/team_usecases.dart';
 import 'package:data_volley_match/features/match_layout/presentation/widgets/team_color_picker.dart';
@@ -13,17 +14,21 @@ part 'match_layout_state.dart';
 class MatchLayoutCubit extends Cubit<MatchLayoutState> {
   final CreateTeamUsecase createTeamUsecase;
   final GetTeamsUsecase getTeamsUsecase;
+  final DeleteTeamUsecase deleteTeamsUsecase;
   MatchLayoutCubit({
     required this.createTeamUsecase,
     required this.getTeamsUsecase,
+    required this.deleteTeamsUsecase,
   }) : super(MatchLayoutInitial());
 
   static MatchLayoutCubit get(context) => BlocProvider.of(context);
-  final GlobalKey<FormState> createNewTeamFormKey = GlobalKey<FormState>();
   final PanelController createNewTeamPanelController = PanelController();
-  final TextEditingController teamNameController =
+  final GlobalKey<FormState> createNewTeamFormKey = GlobalKey<FormState>();
+  final TextEditingController createNewTeamNameController =
       TextEditingController();
   final PanelController editTeamPanelController = PanelController();
+  final GlobalKey<FormState> editTeamFormKey = GlobalKey<FormState>();
+  final TextEditingController editTeamNameController = TextEditingController();
   String level = "";
   Map<String, List<TeamModel>> allTeams = {};
   late List<String> levels = ['15', '17', '19', '1st'];
@@ -36,7 +41,8 @@ class MatchLayoutCubit extends Cubit<MatchLayoutState> {
     emit(CreateTeamLoadingState());
     final response = await createTeamUsecase(
       TeamModel(
-        name: teamNameController.text,
+        id: Constants.generateRandomId(),
+        name: createNewTeamNameController.text,
         level: level,
         color: TeamColorPicker.color,
       ),
@@ -67,12 +73,49 @@ class MatchLayoutCubit extends Cubit<MatchLayoutState> {
     );
   }
 
+  Future<void> deleteTeam() async {
+    emit(DeleteTeamLoadingState());
+    final response = await deleteTeamsUsecase(selectedTeam);
+    getTeams();
+    editTeamPanelController.close();
+    emit(
+      response.fold(
+        (l) => DeleteTeamErrorState(error: l.props.toString()),
+        (r) => DeleteTeamSuccessState(state: r),
+      ),
+    );
+  }
+
+  double editPanelMaxHeight = 160;
+  bool isEditClicked = false;
+  late TeamModel selectedTeam;
+  void openEditPanel(TeamModel team) {
+    selectedTeam = team;
+    editTeamPanelController.isPanelClosed
+        ? editTeamPanelController.open()
+        : editTeamPanelController.close();
+    emit(OpenEditPanel(editTeamPanelController.isPanelClosed));
+  }
+
+  void onEditClick() {
+    isEditClicked = !isEditClicked;
+    isEditClicked ? editPanelMaxHeight = 400 : editPanelMaxHeight = 160;
+    editTeamNameController.text = selectedTeam.name;
+    emit(OpenEditTeam(isEditClicked));
+  }
+
   bool checkBeforeMatchStart() {
     if (homeTeam == null || awayTeam == null) {
-      Constants.showToast(msg: 'No Teams Found!', color: Colors.amber);
+      Constants.showToast(
+        msg: 'No Teams Found!',
+        color: MainColors.waringColor,
+      );
       return false;
     } else if (homeTeam == awayTeam) {
-      Constants.showToast(msg: 'Same Teams!', color: Colors.amber);
+      Constants.showToast(
+        msg: 'Same Teams!',
+        color: MainColors.waringColor,
+      );
       return false;
     }
     return true;

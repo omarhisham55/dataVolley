@@ -4,7 +4,7 @@ import 'package:data_volley_match/core/shared/constants.dart';
 import 'package:data_volley_match/core/shared/widgets.dart';
 import 'package:data_volley_match/core/utils/colors.dart';
 import 'package:data_volley_match/features/match_layout/presentation/cubit/match_layout_cubit.dart';
-import 'package:data_volley_match/features/match_layout/presentation/widgets/create_new_team_panel.dart';
+import 'package:data_volley_match/features/match_layout/presentation/widgets/team_manager_panel.dart';
 import 'package:data_volley_match/features/match_layout/presentation/widgets/select_team_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -52,12 +52,14 @@ class SelectTeams extends StatelessWidget {
                           hintText: 'choose home team',
                           onChanged: (value) => manager.homeTeam = value,
                           items: manager.combinedLevels!,
+                          emptyListText: 'No teams yet',
                         ),
                         SelectTeamDropdown(
                           labelText: 'Away Team',
                           hintText: 'choose away team',
                           onChanged: (value) => manager.awayTeam = value,
                           items: manager.combinedLevels!,
+                          emptyListText: 'No teams yet',
                         ),
                         SharedWidgets.filledButton(
                           "Create new team",
@@ -106,6 +108,16 @@ class SelectTeams extends StatelessWidget {
             top: Radius.circular(24),
           ),
         ),
-        child: CreateNewTeamPanel(manager: manager),
+        child: TeamManagerPanel(
+          formKey: manager.createNewTeamFormKey,
+          controller: manager.createNewTeamNameController,
+          manager: manager,
+          textButton: 'Create',
+          onSubmit: () =>
+              manager.createNewTeamFormKey.currentState!.validate() &&
+                      manager.level.isNotEmpty
+                  ? manager.createTeam()
+                  : null,
+        ),
       );
 }

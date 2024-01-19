@@ -3,14 +3,15 @@ import 'package:data_volley_match/features/match_layout/domain/entities/team.dar
 
 class TeamModel extends Team {
   const TeamModel({
+    required super.id,
     required super.name,
     required super.level,
     required super.color,
     super.image,
   });
-  
 
   factory TeamModel.fromJson(Map<String, dynamic> json) => TeamModel(
+        id: json['id'],
         name: json['name'],
         level: json['level'],
         color: HexColor(json['color']),
@@ -19,6 +20,7 @@ class TeamModel extends Team {
 
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'name': name,
       'level': level,
       'color': color.value.toRadixString(16),

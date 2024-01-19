@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:data_volley_match/core/firebase/firestore/user_firestore_consumer.dart';
 import 'package:data_volley_match/core/shared/constants.dart';
+import 'package:data_volley_match/core/utils/colors.dart';
 import 'package:data_volley_match/core/utils/strings.dart';
 import 'package:data_volley_match/features/match_layout/data/models/team_model.dart';
 import 'package:data_volley_match/features/registration/data/models/user_model.dart';
@@ -12,7 +13,7 @@ abstract class TeamFirestoreManager {
     required String level,
   });
   Future<Map<String, List<TeamModel>>> getTeamsInAllLevels();
-  Future<bool> deleteTeam();
+  Future<bool> deleteTeam(TeamModel team);
   Future<bool> editTeam();
 }
 
@@ -23,9 +24,21 @@ class TeamFirestoreConsumer implements TeamFirestoreManager {
 
   TeamFirestoreConsumer({required this.client});
   @override
-  Future<bool> deleteTeam() {
-    // TODO: implement deleteTeam
-    throw UnimplementedError();
+  Future<bool> deleteTeam(TeamModel team) async {
+    try {
+      await client
+          .collection('users')
+          .doc(user.id)
+          .collection('level')
+          .doc(team.level)
+          .collection('teams')
+          .doc(team.id)
+          .delete();
+      return true;
+    } catch (error) {
+      Constants.showToast(msg: error.toString());
+      return false;
+    }
   }
 
   @override
@@ -62,7 +75,9 @@ class TeamFirestoreConsumer implements TeamFirestoreManager {
         }
       });
     } catch (error) {
-      Constants.showToast(msg: error.toString());
+      Constants.showToast(
+        msg: error.toString(),
+      );
     }
     return teams;
   }
@@ -71,7 +86,10 @@ class TeamFirestoreConsumer implements TeamFirestoreManager {
   Future<bool> saveTeam({required TeamModel team}) async {
     for (var value in teams[team.level] ?? []) {
       if (value == team) {
-        Constants.showToast(msg: MainStrings.teamExists, color: Colors.amber);
+        Constants.showToast(
+          msg: MainStrings.teamExists,
+          color: MainColors.waringColor,
+        );
         return false;
       } else {
         continue;
@@ -84,7 +102,8 @@ class TeamFirestoreConsumer implements TeamFirestoreManager {
           .collection('level')
           .doc(team.level)
           .collection('teams')
-          .add(team.toMap());
+          .doc(team.id)
+          .set(team.toMap());
       return true;
     } catch (error) {
       Constants.showToast(msg: error.toString());

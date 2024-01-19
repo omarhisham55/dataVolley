@@ -6,5 +6,5 @@ abstract class TeamRepository {
   Future<Either<Failure, bool>> saveTeam({required TeamModel team});
   Future<Either<Failure, Map<String, List<TeamModel>>>> getTeams();
   Future<Either<Failure, dynamic>> editTeams();
-  Future<Either<Failure, dynamic>> deleteTeams();
+  Future<Either<Failure, bool>> deleteTeams({required TeamModel team});
 }

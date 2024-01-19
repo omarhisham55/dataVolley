@@ -17,14 +17,20 @@ class SharedWidgets {
     Function() onPressed, {
     double? width,
     double? height,
+    double? borderRadius,
     EdgeInsets? margin,
+    EdgeInsets? textPadding,
+    Color? color,
   }) =>
       ButtonImageFb1(
         text: text,
         onPressed: onPressed,
         width: width,
         height: height,
+        borderRadius: borderRadius,
         margin: margin,
+        textPadding: textPadding,
+        color: color,
       );
   static Widget hintTextField({
     required BuildContext context,
@@ -145,14 +151,20 @@ class ButtonImageFb1 extends StatelessWidget {
   final Function() onPressed;
   final double? width;
   final double? height;
+  final double? borderRadius;
   final EdgeInsets? margin;
+  final EdgeInsets? textPadding;
+  final Color? color;
   const ButtonImageFb1({
     super.key,
     required this.text,
     required this.onPressed,
     this.height,
+    this.borderRadius,
     this.width = double.infinity,
     this.margin = const EdgeInsets.all(0),
+    this.textPadding = const EdgeInsets.all(0),
+    this.color,
   });
   @override
   Widget build(BuildContext context) {
@@ -175,23 +187,27 @@ class ButtonImageFb1 extends StatelessWidget {
         padding: EdgeInsets.zero,
         splashColor: MainColors.splashButtonColor,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(borderRadius ?? 24),
         ),
         child: Ink(
           decoration: BoxDecoration(
             //gradient:
-            image: const DecorationImage(
-              image: NetworkImage(
-                  "https://firebasestorage.googleapis.com/v0/b/flutterbricks-public.appspot.com/o/finance_app_2%2FbuttonBackgroundSmall.png?alt=media&token=fa2f9bba-120a-4a94-8bc2-f3adc2b58a73"),
-              fit: BoxFit.cover,
-            ),
-            borderRadius: BorderRadius.circular(24),
+            color: color,
+            image: color == null
+                ? const DecorationImage(
+                    image: NetworkImage(
+                        "https://firebasestorage.googleapis.com/v0/b/flutterbricks-public.appspot.com/o/finance_app_2%2FbuttonBackgroundSmall.png?alt=media&token=fa2f9bba-120a-4a94-8bc2-f3adc2b58a73"),
+                    fit: BoxFit.cover,
+                  )
+                : null,
+            borderRadius: BorderRadius.circular(borderRadius ?? 24),
           ),
           child: Container(
             constraints: const BoxConstraints(
               minWidth: 88.0,
               minHeight: 36.0,
             ),
+            padding: textPadding,
             alignment: Alignment.center,
             child: Text(
               text,

@@ -38,7 +38,6 @@ class _TeamColorPickerState extends State<TeamColorPicker> {
         );
       },
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 40),
         constraints: const BoxConstraints(maxHeight: 20, maxWidth: 20),
         color: TeamColorPicker.color,
       ),

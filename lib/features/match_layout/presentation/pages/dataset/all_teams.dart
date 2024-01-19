@@ -1,9 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
+import 'package:data_volley_match/core/shared/widgets.dart';
+import 'package:data_volley_match/core/utils/colors.dart';
 import 'package:data_volley_match/core/utils/images.dart';
 import 'package:data_volley_match/features/match_layout/data/models/team_model.dart';
 import 'package:data_volley_match/features/match_layout/presentation/cubit/match_layout_cubit.dart';
 import 'package:data_volley_match/features/match_layout/presentation/widgets/tabs.dart';
+import 'package:data_volley_match/features/match_layout/presentation/widgets/team_manager_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -23,7 +26,13 @@ class AllTeams extends StatelessWidget {
           ),
           builder: (context) {
             return SlidingUpPanel(
-              panelBuilder: (sc) => _editTeamPanel(context, manager),
+              controller: manager.editTeamPanelController,
+              minHeight: 0,
+              maxHeight: manager.editPanelMaxHeight,
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(24),
+              ),
+              panel: _editTeamPanel(context, manager),
               body: Tabs(
                 length: manager.levels.length,
                 tabs: manager.levels,
@@ -56,13 +65,20 @@ class AllTeams extends StatelessWidget {
                   ),
                 ),
             builder: (context) {
-              return ListView.builder(
-                itemCount: teamModels.length,
-                itemBuilder: (context, index) => _viewTeamItem(
-                  context,
-                  teamModels[index],
-                  manager,
-                ),
+              return Column(
+                children: [
+                  if (state is DeleteTeamLoadingState)
+                    const LinearProgressIndicator(),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: teamModels.length,
+                    itemBuilder: (context, index) => _viewTeamItem(
+                      context,
+                      teamModels[index],
+                      manager,
+                    ),
+                  ),
+                ],
               );
             });
       },
@@ -75,12 +91,10 @@ class AllTeams extends StatelessWidget {
     MatchLayoutCubit manager,
   ) {
     return InkWell(
-      onTap: () => manager.editTeamPanelController.isPanelOpen
-          ? manager.editTeamPanelController.close()
-          : null,
-      onLongPress: () => manager.editTeamPanelController.isPanelClosed
-          ? manager.editTeamPanelController.open()
-          : manager.editTeamPanelController.close(),
+      // onTap: () => manager.editTeamPanelController.isPanelOpen
+      //     ? manager.editTeamPanelController.close()
+      //     : null,
+      onTap: () => manager.openEditPanel(team),
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Row(
@@ -120,7 +134,55 @@ class AllTeams extends StatelessWidget {
     );
   }
 
-  Widget _editTeamPanel(BuildContext context, MatchLayoutCubit manager) {
-    return Container();
+  Widget _editTeamPanel(
+    BuildContext context,
+    MatchLayoutCubit manager,
+  ) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: const BoxDecoration(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(24),
+        ),
+        gradient: MainColors.primaryGradient,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SharedWidgets.outlinedButton('EDIT', () => manager.onEditClick()),
+          SharedWidgets.filledButton(
+            'DELETE',
+            () => manager.deleteTeam(),
+            color: MainColors.errorColor,
+            borderRadius: 10,
+            textPadding: const EdgeInsets.symmetric(vertical: 15),
+            margin: const EdgeInsets.only(top: 10),
+          ),
+          Visibility(
+            visible: manager.isEditClicked,
+            child: AnimatedScale(
+              duration: const Duration(milliseconds: 200),
+              scale: manager.isEditClicked ? 1 : 0,
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                margin: const EdgeInsets.only(top: 10),
+                child: Material(
+                  color: MainColors.secondaryColor,
+                  borderRadius: BorderRadius.circular(24),
+                  child: TeamManagerPanel(
+                    formKey: manager.editTeamFormKey,
+                    controller: manager.editTeamNameController,
+                    manager: manager,
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    textButton: 'Submit',
+                    onSubmit: () => null,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

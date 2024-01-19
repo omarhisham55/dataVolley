@@ -8,9 +8,9 @@ import 'package:data_volley_match/injection.dart';
 Future<void> matchInit() async {
   injection.registerFactory(
     () => MatchLayoutCubit(
-      createTeamUsecase: injection(),
-      getTeamsUsecase: injection(),
-    ),
+        createTeamUsecase: injection(),
+        getTeamsUsecase: injection(),
+        deleteTeamsUsecase: injection()),
   );
 
   injection.registerLazySingleton<TeamRepository>(
@@ -24,5 +24,8 @@ Future<void> matchInit() async {
   );
   injection.registerLazySingleton(
     () => GetTeamsUsecase(teamRepository: injection()),
+  );
+  injection.registerLazySingleton(
+    () => DeleteTeamUsecase(teamRepository: injection()),
   );
 }

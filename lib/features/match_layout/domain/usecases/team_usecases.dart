@@ -25,3 +25,13 @@ class GetTeamsUsecase
     return await teamRepository.getTeams();
   }
 }
+
+class DeleteTeamUsecase implements FutureUseCase<bool, TeamModel> {
+  final TeamRepository teamRepository;
+
+  DeleteTeamUsecase({required this.teamRepository});
+  @override
+  Future<Either<Failure, bool>> call(TeamModel param) async {
+    return await teamRepository.deleteTeams(team: param);
+  }
+}

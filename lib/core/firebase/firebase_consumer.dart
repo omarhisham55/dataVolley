@@ -1,8 +1,8 @@
 import 'package:data_volley_match/config/error/exceptions.dart';
 import 'package:data_volley_match/core/firebase/firestore/user_firestore_consumer.dart';
 import 'package:data_volley_match/core/shared/constants.dart';
+import 'package:data_volley_match/core/utils/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 abstract class FirebaseManager {
@@ -88,47 +88,47 @@ class FirebaseConsumer implements FirebaseManager {
       case "INVALID_LOGIN_CREDENTIALS":
         Constants.showToast(
           msg: const InvalidLoginCredentials().msg!,
-          color: Colors.red,
+          color: MainColors.errorColor,
         );
         throw const InvalidLoginCredentials();
       case "invalid-email":
         Constants.showToast(
           msg: const InvalidEmailFormat().msg!,
-          color: Colors.red,
+          color: MainColors.errorColor,
         );
         throw const InvalidEmailFormat();
       case "wrong-password":
         Constants.showToast(
           msg: const InvalidPassword().msg!,
-          color: Colors.red,
+          color: MainColors.errorColor,
         );
         throw const InvalidPassword();
       case "user-not-found":
         Constants.showToast(
           msg: const UserNotFound().msg!,
-          color: Colors.red,
+          color: MainColors.errorColor,
         );
         throw const UserNotFound();
       case "email-already-in-use":
         Constants.showToast(
           msg: const EmailInUse().msg!,
-          color: Colors.red,
+          color: MainColors.errorColor,
         );
         throw const EmailInUse();
       case "invalid-phone-number":
         Constants.showToast(
           msg: const InvalidPhoneNumber().msg!,
-          color: Colors.red,
+          color: MainColors.errorColor,
         );
       case "too-many-requests":
         Constants.showToast(
           msg: const TooManyRequests().msg!,
-          color: Colors.red,
+          color: MainColors.errorColor,
         );
       default:
         Constants.showToast(
           msg: UnknownError(error.code).msg!,
-          color: Colors.red,
+          color: MainColors.errorColor,
         );
         throw const UnknownError();
     }

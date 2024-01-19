@@ -29,6 +29,44 @@ class CreateTeamErrorState extends MatchLayoutState {
   List<Object> get props => [error];
 }
 
+class OpenEditTeam extends MatchLayoutState {
+  final bool state;
+
+  const OpenEditTeam(this.state);
+
+  @override
+  List<Object> get props => [state];
+}
+
+class OpenEditPanel extends MatchLayoutState {
+  final bool state;
+
+  const OpenEditPanel(this.state);
+
+  @override
+  List<Object> get props => [state];
+}
+
+class EditTeamLoadingState extends MatchLayoutState {}
+
+class EditTeamSuccessState extends MatchLayoutState {
+  final bool state;
+
+  const EditTeamSuccessState({required this.state});
+
+  @override
+  List<Object> get props => [state];
+}
+
+class EditTeamErrorState extends MatchLayoutState {
+  final String error;
+
+  const EditTeamErrorState({required this.error});
+
+  @override
+  List<Object> get props => [error];
+}
+
 class GetTeamsSuccessState extends MatchLayoutState {
   final int count;
 
@@ -42,6 +80,26 @@ class GetTeamsErrorState extends MatchLayoutState {
   final String error;
 
   const GetTeamsErrorState({required this.error});
+
+  @override
+  List<Object> get props => [error];
+}
+
+class DeleteTeamLoadingState extends MatchLayoutState {}
+
+class DeleteTeamSuccessState extends MatchLayoutState {
+  final bool state;
+
+  const DeleteTeamSuccessState({required this.state});
+
+  @override
+  List<Object> get props => [state];
+}
+
+class DeleteTeamErrorState extends MatchLayoutState {
+  final String error;
+
+  const DeleteTeamErrorState({required this.error});
 
   @override
   List<Object> get props => [error];

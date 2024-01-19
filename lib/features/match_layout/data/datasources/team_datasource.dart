@@ -5,7 +5,7 @@ abstract class TeamDatasource {
   Future<bool> saveTeam({required TeamModel team});
   Future<Map<String, List<TeamModel>>> getTeams();
   Future<dynamic> editTeam();
-  Future<dynamic> deleteTeam();
+  Future<bool> deleteTeam({required TeamModel team});
 }
 
 class TeamDatasourceImpl extends TeamDatasource {
@@ -25,9 +25,8 @@ class TeamDatasourceImpl extends TeamDatasource {
   }
 
   @override
-  Future deleteTeam() {
-    // TODO: implement deleteTeam
-    throw UnimplementedError();
+  Future<bool> deleteTeam({required TeamModel team}) async {
+    return await firestoreConsumer.deleteTeam(team);
   }
 
   @override

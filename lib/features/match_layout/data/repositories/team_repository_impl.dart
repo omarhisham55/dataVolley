@@ -21,9 +21,14 @@ class TeamRepositoryImpl implements TeamRepository {
   }
 
   @override
-  Future<Either<Failure, dynamic>> deleteTeams() {
-    // TODO: implement deleteTeams
-    throw UnimplementedError();
+  Future<Either<Failure, bool>> deleteTeams({
+    required TeamModel team,
+  }) async {
+    try {
+      return Right(await teamDatasource.deleteTeam(team: team));
+    } catch (error) {
+      return Left(ServerFailure());
+    }
   }
 
   @override
