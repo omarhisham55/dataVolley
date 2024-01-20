@@ -1,6 +1,5 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:data_volley_match/core/shared/widgets.dart';
-import 'package:data_volley_match/features/match_layout/data/models/team_model.dart';
 import 'package:data_volley_match/features/match_layout/presentation/cubit/match_layout_cubit.dart';
 import 'package:data_volley_match/features/match_layout/presentation/widgets/team_color_picker.dart';
 import 'package:data_volley_match/features/match_layout/presentation/widgets/select_team_dropdown.dart';
@@ -30,9 +29,12 @@ class TeamManagerPanel extends StatelessWidget {
       listener: (context, state) {
         if (state is CreateTeamSuccessState) {
           if (state.state == true) {
-            BlocProvider.of<MatchLayoutCubit>(context)
-                .createNewTeamPanelController
-                .close();
+            manager.createNewTeamPanelController.close();
+          }
+        }
+        if (state is EditTeamSuccessState) {
+          if (state.state == true) {
+            manager.editTeamPanelController.close();
           }
         }
       },
@@ -66,15 +68,10 @@ class TeamManagerPanel extends StatelessWidget {
                         children: [
                           const TeamColorPicker(),
                           GestureDetector(
-                            onTap: () => manager.addTeamImage(
-                              TeamModel(
-                                  id: '1',
-                                  name: '1',
-                                  level: '15',
-                                  color: Colors.red),
-                            ),
-                            child:
-                                const Icon(Icons.add_photo_alternate_rounded),
+                            onTap: () => manager.addTeamImage(),
+                            child: manager.createdTeamImage != null
+                                ? const Icon(Icons.done)
+                                : const Icon(Icons.add_photo_alternate_rounded),
                           ),
                         ],
                       ),

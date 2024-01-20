@@ -9,6 +9,8 @@ abstract class MatchLayoutState extends Equatable {
 
 class MatchLayoutInitial extends MatchLayoutState {}
 
+class ClearFormState extends MatchLayoutState {}
+
 class CreateTeamLoadingState extends MatchLayoutState {}
 
 class CreateTeamSuccessState extends MatchLayoutState {
@@ -104,6 +106,8 @@ class DeleteTeamErrorState extends MatchLayoutState {
   @override
   List<Object> get props => [error];
 }
+
+class AddImageLoadingState extends MatchLayoutState {}
 
 class AddImageSuccessState extends MatchLayoutState {}
 

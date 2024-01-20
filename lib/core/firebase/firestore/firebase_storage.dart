@@ -20,7 +20,7 @@ class FirebaseStorageConsumer implements FirebasrStorageManager {
         .child(Uri.file(imageManager.file!.path).pathSegments.last);
     if (imageManager.file != null) {
       try {
-        return response.putFile(imageManager.file!).then(
+        return await response.putFile(imageManager.file!).then(
               (value) async => await value.ref.getDownloadURL(),
             );
       } on FirebaseException catch (error) {

@@ -10,6 +10,7 @@ Future<void> matchInit() async {
     () => MatchLayoutCubit(
       createTeamUsecase: injection(),
       getTeamsUsecase: injection(),
+      editTeamUsecase: injection(),
       deleteTeamsUsecase: injection(),
       imageUsecase: injection(),
     ),
@@ -26,6 +27,9 @@ Future<void> matchInit() async {
   );
   injection.registerLazySingleton(
     () => GetTeamsUsecase(teamRepository: injection()),
+  );
+  injection.registerLazySingleton(
+    () => EditTeamUsecase(teamRepository: injection()),
   );
   injection.registerLazySingleton(
     () => DeleteTeamUsecase(teamRepository: injection()),

@@ -32,9 +32,12 @@ class TeamRepositoryImpl implements TeamRepository {
   }
 
   @override
-  Future<Either<Failure, dynamic>> editTeams() {
-    // TODO: implement editTeams
-    throw UnimplementedError();
+  Future<Either<Failure, bool>> editTeams({required TeamModel team}) async {
+    try {
+      return Right(await teamDatasource.editTeam(team: team));
+    } catch (error) {
+      return Left(ServerFailure(error: error.toString()));
+    }
   }
 
   @override

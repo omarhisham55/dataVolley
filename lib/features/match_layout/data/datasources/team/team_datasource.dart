@@ -4,7 +4,7 @@ import 'package:data_volley_match/features/match_layout/data/models/team_model.d
 abstract class TeamDatasource {
   Future<bool> saveTeam({required TeamModel team});
   Future<Map<String, List<TeamModel>>> getTeams();
-  Future<dynamic> editTeam();
+  Future<bool> editTeam({required TeamModel team});
   Future<bool> deleteTeam({required TeamModel team});
 }
 
@@ -30,8 +30,7 @@ class TeamDatasourceImpl extends TeamDatasource {
   }
 
   @override
-  Future editTeam() {
-    // TODO: implement editTeam
-    throw UnimplementedError();
+  Future<bool> editTeam({required TeamModel team}) async {
+    return await firestoreConsumer.editTeam(team);
   }
 }

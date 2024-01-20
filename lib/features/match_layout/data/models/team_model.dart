@@ -11,7 +11,7 @@ class TeamModel extends Team {
   });
 
   factory TeamModel.fromJson(Map<String, dynamic> json) => TeamModel(
-        id: json['id'],
+        id: json['_id'],
         name: json['name'],
         level: json['level'],
         color: HexColor(json['color']),
@@ -20,7 +20,7 @@ class TeamModel extends Team {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
+      '_id': id,
       'name': name,
       'level': level,
       'color': color.value.toRadixString(16),

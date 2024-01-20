@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:data_volley_match/core/shared/widgets.dart';
 import 'package:data_volley_match/core/utils/colors.dart';
@@ -67,7 +66,8 @@ class AllTeams extends StatelessWidget {
             builder: (context) {
               return Column(
                 children: [
-                  if (state is DeleteTeamLoadingState)
+                  if (state is DeleteTeamLoadingState ||
+                      state is EditTeamLoadingState)
                     const LinearProgressIndicator(),
                   ListView.builder(
                     shrinkWrap: true,
@@ -91,27 +91,26 @@ class AllTeams extends StatelessWidget {
     MatchLayoutCubit manager,
   ) {
     return InkWell(
-      // onTap: () => manager.editTeamPanelController.isPanelOpen
-      //     ? manager.editTeamPanelController.close()
-      //     : null,
-      onTap: () => manager.openEditPanel(team),
+      onTap: () => manager.editTeamPanelController.isPanelOpen
+          ? manager.editTeamPanelController.close()
+          : null,
+      onLongPress: () => manager.openEditPanel(team),
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            CachedNetworkImage(
-              imageUrl: team.image ??
-                  'https://i1.sndcdn.com/avatars-000437232558-yuo0mv-t500x500.jpg',
+            Container(
+              width: 50,
               height: 50,
-              errorWidget: (context, url, error) => Image.asset(
-                MainImages.unknownClub,
-              ),
-              placeholder: (context, string) => Image.asset(
-                MainImages.unknownClub,
-              ),
-              imageBuilder: (context, imageProvider) => Image(
-                image: imageProvider,
+              decoration: BoxDecoration(
+                image: team.image == null
+                    ? const DecorationImage(
+                        image: AssetImage(MainImages.unknownClub))
+                    : DecorationImage(
+                        image: NetworkImage(team.image ?? ''),
+                        fit: BoxFit.cover,
+                      ),
               ),
             ),
             Expanded(
@@ -175,7 +174,11 @@ class AllTeams extends StatelessWidget {
                     manager: manager,
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     textButton: 'Submit',
-                    onSubmit: () => null,
+                    onSubmit: () =>
+                        manager.editTeamFormKey.currentState!.validate() &&
+                                manager.level.isNotEmpty
+                            ? manager.editTeam()
+                            : null,
                   ),
                 ),
               ),

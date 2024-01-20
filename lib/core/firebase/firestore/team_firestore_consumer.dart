@@ -9,12 +9,10 @@ import 'package:flutter/material.dart';
 
 abstract class TeamFirestoreManager {
   Future<bool> saveTeam({required TeamModel team});
-  Future<List<TeamModel>> getTeamsInSingleLevel({
-    required String level,
-  });
+  Future<List<TeamModel>> getTeamsInSingleLevel({required String level});
   Future<Map<String, List<TeamModel>>> getTeamsInAllLevels();
   Future<bool> deleteTeam(TeamModel team);
-  Future<bool> editTeam();
+  Future<bool> editTeam(TeamModel team);
 }
 
 class TeamFirestoreConsumer implements TeamFirestoreManager {
@@ -42,9 +40,21 @@ class TeamFirestoreConsumer implements TeamFirestoreManager {
   }
 
   @override
-  Future<bool> editTeam() {
-    // TODO: implement editTeam
-    throw UnimplementedError();
+  Future<bool> editTeam(TeamModel team) async {
+    try {
+      await client
+          .collection('users')
+          .doc(user.id)
+          .collection('level')
+          .doc(team.level)
+          .collection('teams')
+          .doc(team.id)
+          .update(team.toMap());
+      return true;
+    } catch (error) {
+      Constants.showToast(msg: error.toString());
+      return false;
+    }
   }
 
   @override

@@ -15,11 +15,13 @@ part 'match_layout_state.dart';
 class MatchLayoutCubit extends Cubit<MatchLayoutState> {
   final CreateTeamUsecase createTeamUsecase;
   final GetTeamsUsecase getTeamsUsecase;
+  final EditTeamUsecase editTeamUsecase;
   final DeleteTeamUsecase deleteTeamsUsecase;
   final ImageUsecase imageUsecase;
   MatchLayoutCubit({
     required this.createTeamUsecase,
     required this.getTeamsUsecase,
+    required this.editTeamUsecase,
     required this.deleteTeamsUsecase,
     required this.imageUsecase,
   }) : super(MatchLayoutInitial());
@@ -32,14 +34,23 @@ class MatchLayoutCubit extends Cubit<MatchLayoutState> {
   final PanelController editTeamPanelController = PanelController();
   final GlobalKey<FormState> editTeamFormKey = GlobalKey<FormState>();
   final TextEditingController editTeamNameController = TextEditingController();
-  String level = "";
+  String level = '';
   String? createdTeamImage;
+  String? editedTeamImage;
   Map<String, List<TeamModel>> allTeams = {};
   late List<String> levels = ['15', '17', '19', '1st'];
   List<TeamModel>? combinedLevels;
 
   TeamModel? homeTeam;
   TeamModel? awayTeam;
+
+  void resetForm() {
+    level = '';
+    createNewTeamNameController.text = '';
+    createdTeamImage = null;
+    editTeamNameController.text = '';
+    emit(ClearFormState());
+  }
 
   //* Team CRUD methods
   Future<void> createTeam() async {
@@ -54,6 +65,7 @@ class MatchLayoutCubit extends Cubit<MatchLayoutState> {
       ),
     );
     getTeams();
+    resetForm();
     emit(
       response.fold(
         (l) => CreateTeamErrorState(error: l.props.toString()),
@@ -79,7 +91,27 @@ class MatchLayoutCubit extends Cubit<MatchLayoutState> {
     );
   }
 
-  Future<void> editTeam() async {}
+  Future<void> editTeam() async {
+    emit(EditTeamLoadingState());
+    final response = await editTeamUsecase(
+      TeamModel(
+        id: selectedTeam.id,
+        name: editTeamNameController.text,
+        level: level.isNotEmpty ? level : selectedTeam.level,
+        color: TeamColorPicker.color,
+        image: createdTeamImage ?? selectedTeam.image,
+      ),
+    );
+    resetForm();
+    getTeams();
+    onEditClick();
+    emit(
+      response.fold(
+        (l) => EditTeamErrorState(error: l.props.toString()),
+        (r) => EditTeamSuccessState(state: r),
+      ),
+    );
+  }
 
   Future<void> deleteTeam() async {
     emit(DeleteTeamLoadingState());
@@ -95,8 +127,9 @@ class MatchLayoutCubit extends Cubit<MatchLayoutState> {
   }
 
   //* Images
-  Future<void> addTeamImage(TeamModel team) async {
-    final response = await imageUsecase(team);
+  Future<void> addTeamImage() async {
+    emit(AddImageLoadingState());
+    final response = await imageUsecase(NoParam());
     emit(
       response.fold(
         (l) => AddImageErrorState(error: l.props.toString()),
@@ -124,6 +157,7 @@ class MatchLayoutCubit extends Cubit<MatchLayoutState> {
     isEditClicked = !isEditClicked;
     isEditClicked ? editPanelMaxHeight = 400 : editPanelMaxHeight = 160;
     editTeamNameController.text = selectedTeam.name;
+    TeamColorPicker.color = selectedTeam.color;
     emit(OpenEditTeam(isEditClicked));
   }
 
