@@ -1,5 +1,6 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:data_volley_match/core/shared/widgets.dart';
+import 'package:data_volley_match/features/match_layout/data/models/team_model.dart';
 import 'package:data_volley_match/features/match_layout/presentation/cubit/match_layout_cubit.dart';
 import 'package:data_volley_match/features/match_layout/presentation/widgets/team_color_picker.dart';
 import 'package:data_volley_match/features/match_layout/presentation/widgets/select_team_dropdown.dart';
@@ -65,7 +66,13 @@ class TeamManagerPanel extends StatelessWidget {
                         children: [
                           const TeamColorPicker(),
                           GestureDetector(
-                            onTap: () => null,
+                            onTap: () => manager.addTeamImage(
+                              TeamModel(
+                                  id: '1',
+                                  name: '1',
+                                  level: '15',
+                                  color: Colors.red),
+                            ),
                             child:
                                 const Icon(Icons.add_photo_alternate_rounded),
                           ),

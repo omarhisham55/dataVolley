@@ -33,6 +33,7 @@ class MatchLayoutCubit extends Cubit<MatchLayoutState> {
   final GlobalKey<FormState> editTeamFormKey = GlobalKey<FormState>();
   final TextEditingController editTeamNameController = TextEditingController();
   String level = "";
+  String? createdTeamImage;
   Map<String, List<TeamModel>> allTeams = {};
   late List<String> levels = ['15', '17', '19', '1st'];
   List<TeamModel>? combinedLevels;
@@ -49,6 +50,7 @@ class MatchLayoutCubit extends Cubit<MatchLayoutState> {
         name: createNewTeamNameController.text,
         level: level,
         color: TeamColorPicker.color,
+        image: createdTeamImage,
       ),
     );
     getTeams();
@@ -98,7 +100,10 @@ class MatchLayoutCubit extends Cubit<MatchLayoutState> {
     emit(
       response.fold(
         (l) => AddImageErrorState(error: l.props.toString()),
-        (r) => AddImageSuccessState(),
+        (r) {
+          createdTeamImage = r;
+          return AddImageSuccessState();
+        },
       ),
     );
   }

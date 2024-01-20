@@ -20,37 +20,39 @@ class SelectTeamDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    items.isEmpty
-        ? Constants.showToast(
-            msg: emptyListText,
-            color: MainColors.waringColor,
-          )
-        : null;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: DropdownButtonFormField<dynamic>(
-        dropdownColor: MainColors.primaryColor,
-        hint: Text(
-          hintText,
-          style: Theme.of(context)
-              .textTheme
-              .titleSmall!
-              .copyWith(color: Colors.grey),
+    return GestureDetector(
+      onTap: () => items.isEmpty
+          ? Constants.showToast(
+              msg: emptyListText,
+              color: MainColors.waringColor,
+            )
+          : null,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: DropdownButtonFormField<dynamic>(
+          dropdownColor: MainColors.primaryColor,
+          hint: Text(
+            hintText,
+            style: Theme.of(context)
+                .textTheme
+                .titleSmall!
+                .copyWith(color: Colors.grey),
+          ),
+          style: Theme.of(context).textTheme.titleSmall,
+          decoration: InputDecoration(
+            labelText: labelText,
+            labelStyle: Theme.of(context).textTheme.titleSmall,
+          ),
+          items: items.map(
+            (item) {
+              return item is TeamModel
+                  ? _dropDownTeams(item)
+                  : _dropDownItem(item);
+            },
+          ).toList(),
+          value: null,
+          onChanged: onChanged,
         ),
-        style: Theme.of(context).textTheme.titleSmall,
-        decoration: InputDecoration(
-          labelText: labelText,
-          labelStyle: Theme.of(context).textTheme.titleSmall,
-        ),
-        items: items.map(
-          (item) {
-            return item is TeamModel
-                ? _dropDownTeams(item)
-                : _dropDownItem(item);
-          },
-        ).toList(),
-        value: null,
-        onChanged: onChanged,
       ),
     );
   }

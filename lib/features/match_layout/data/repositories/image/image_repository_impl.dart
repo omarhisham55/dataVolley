@@ -9,7 +9,8 @@ class ImageRepositoryImpl implements ImageRepository {
 
   ImageRepositoryImpl({required this.imageDatasource});
   @override
-  Future<Either<Failure, void>> addTeamImage({required TeamModel team}) async {
+  Future<Either<Failure, String?>> addTeamImage(
+      {required TeamModel team}) async {
     try {
       return Right(await imageDatasource.addTeamImage(team: team));
     } catch (error) {
