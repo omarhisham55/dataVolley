@@ -5,11 +5,13 @@ class Tabs extends StatefulWidget {
   final int length;
   final List<String> tabs;
   final List<Widget> tabsBody;
+  final List<Widget>? actions;
   const Tabs({
     super.key,
     required this.length,
     required this.tabs,
     required this.tabsBody,
+    this.actions,
   });
 
   @override
@@ -36,6 +38,7 @@ class _TabsState extends State<Tabs> with SingleTickerProviderStateMixin {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
+        actions: widget.actions,
         bottom: TabBar(
           controller: _controller,
           tabs: widget.tabs

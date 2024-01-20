@@ -26,7 +26,7 @@ class SelectTeams extends StatelessWidget {
         minHeight: 0,
         maxHeight: 240,
         body: _bodyContent(manager),
-        panelBuilder: (sc) => _buildPanel(manager),
+        panelBuilder: (sc) => buildPanel(manager),
       ),
     );
   }
@@ -101,7 +101,7 @@ class SelectTeams extends StatelessWidget {
         },
       );
 
-  Widget _buildPanel(MatchLayoutCubit manager) => Container(
+  static Widget buildPanel(MatchLayoutCubit manager) => Container(
         decoration: const BoxDecoration(
           gradient: MainColors.primaryGradient,
           borderRadius: BorderRadius.vertical(
