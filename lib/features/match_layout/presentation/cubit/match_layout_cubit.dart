@@ -178,4 +178,64 @@ class MatchLayoutCubit extends Cubit<MatchLayoutState> {
     }
     return true;
   }
+
+  //* match positions
+  final List<List<TextEditingController>> homeTeamPositions = List.generate(
+    5,
+    (index) => List.generate(
+      6,
+      (index) => TextEditingController(),
+    ),
+  );
+
+  final List<TextEditingController> homeTeamSetter = List.generate(
+    5,
+    (index) => TextEditingController(),
+  );
+
+  final List<TextEditingController> awayTeamSetter = List.generate(
+    5,
+    (index) => TextEditingController(),
+  );
+
+  final List<List<TextEditingController>> awayTeamPositions = List.generate(
+    5,
+    (index) => List.generate(
+      6,
+      (index) => TextEditingController(),
+    ),
+  );
+
+  //* match score
+  final List<TextEditingController> homeMatchScore = List.generate(
+    5,
+    (index) => TextEditingController(),
+  );
+  final List<TextEditingController> awayMatchScore = List.generate(
+    5,
+    (index) => TextEditingController(),
+  );
+
+  //* setter in position
+  bool setterFound = false;
+  void setSetters(
+    TextEditingController setter,
+    TextEditingController position,
+  ) {
+    if (position.text == setter.text && setter.text.isNotEmpty) {
+      setterFound = true;
+      return;
+    } else if (setter.text.isEmpty) {
+      setterFound = false;
+    } else {
+      setterFound = false;
+    }
+    emit(SetterState(isSetterFound: setterFound));
+  }
+
+  //* match CRUD methods
+  Future<void> createMatch() async {}
+  Future<void> getMatches() async {}
+  Future<void> editMatch() async {}
+  Future<void> deleteMatch() async {}
 }

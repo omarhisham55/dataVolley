@@ -119,3 +119,11 @@ class AddImageErrorState extends MatchLayoutState {
   @override
   List<Object> get props => [error];
 }
+
+class SetterState extends MatchLayoutState {
+  final bool isSetterFound;
+
+  const SetterState({required this.isSetterFound});
+  @override
+  List<Object> get props => [isSetterFound];
+}

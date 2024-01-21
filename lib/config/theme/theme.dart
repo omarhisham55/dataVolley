@@ -9,6 +9,7 @@ ThemeData appTheme = ThemeData(
   ),
   iconTheme: const IconThemeData(color: Colors.white),
   textTheme: const TextTheme(
+    displayLarge: TextStyle(color: Colors.white),
     displayMedium: TextStyle(color: Colors.white),
     titleSmall: TextStyle(color: Colors.white),
     headlineLarge: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
