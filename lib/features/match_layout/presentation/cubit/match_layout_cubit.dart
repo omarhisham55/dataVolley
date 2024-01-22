@@ -1,8 +1,10 @@
 import 'package:data_volley_match/core/shared/constants.dart';
 import 'package:data_volley_match/core/shared/usecases.dart';
 import 'package:data_volley_match/core/utils/colors.dart';
+import 'package:data_volley_match/features/match_layout/data/models/match_model.dart';
 import 'package:data_volley_match/features/match_layout/data/models/team_model.dart';
 import 'package:data_volley_match/features/match_layout/domain/usecases/image/image_usecase.dart';
+import 'package:data_volley_match/features/match_layout/domain/usecases/match/match_usecase.dart';
 import 'package:data_volley_match/features/match_layout/domain/usecases/team/team_usecases.dart';
 import 'package:data_volley_match/features/match_layout/presentation/widgets/team_color_picker.dart';
 import 'package:equatable/equatable.dart';
@@ -18,12 +20,20 @@ class MatchLayoutCubit extends Cubit<MatchLayoutState> {
   final EditTeamUsecase editTeamUsecase;
   final DeleteTeamUsecase deleteTeamsUsecase;
   final ImageUsecase imageUsecase;
+  final SaveMatchUsecase saveMatchUsecase;
+  final GetMatchesUsecase getMatchesUsecase;
+  final EditMatchUsecase editMatchUsecase;
+  final DeleteMatchUsecase deleteMatchUsecase;
   MatchLayoutCubit({
     required this.createTeamUsecase,
     required this.getTeamsUsecase,
     required this.editTeamUsecase,
     required this.deleteTeamsUsecase,
     required this.imageUsecase,
+    required this.saveMatchUsecase,
+    required this.getMatchesUsecase,
+    required this.editMatchUsecase,
+    required this.deleteMatchUsecase,
   }) : super(MatchLayoutInitial());
 
   static MatchLayoutCubit get(context) => BlocProvider.of(context);
@@ -187,16 +197,17 @@ class MatchLayoutCubit extends Cubit<MatchLayoutState> {
       (index) => TextEditingController(),
     ),
   );
-  late final List<List<TextEditingController>> playedHomeTeamPositions =
-      homeTeamPositions
-          .map(
-            (e) => e
-                .takeWhile(
-                  (value) => value.text.isNotEmpty,
-                )
-                .toList(),
-          )
-          .toList();
+  late final List<List<String>> playedHomeTeamPositions = homeTeamPositions
+      .map(
+        (e) => e
+            .map((e) => e.text)
+            .toList()
+            .takeWhile(
+              (value) => value.isNotEmpty,
+            )
+            .toList(),
+      )
+      .toList();
 
   final List<TextEditingController> homeTeamSetter = List.generate(
     5,
@@ -216,16 +227,17 @@ class MatchLayoutCubit extends Cubit<MatchLayoutState> {
     ),
   );
 
-  late final List<List<TextEditingController>> playedAwayTeamPositions =
-      awayTeamPositions
-          .map(
-            (e) => e
-                .takeWhile(
-                  (value) => value.text.isNotEmpty,
-                )
-                .toList(),
-          )
-          .toList();
+  late final List<List<String>> playedAwayTeamPositions = awayTeamPositions
+      .map(
+        (e) => e
+            .map((e) => e.text)
+            .toList()
+            .takeWhile(
+              (value) => value.isNotEmpty,
+            )
+            .toList(),
+      )
+      .toList();
 
   //* match score
   final List<TextEditingController> homeMatchScore = List.generate(
@@ -247,9 +259,78 @@ class MatchLayoutCubit extends Cubit<MatchLayoutState> {
     emit(SetterState(isSetterFound: DateTime.now().second));
   }
 
+  List<String> combinedScore(
+    List<TextEditingController> homeScore,
+    List<TextEditingController> awayScore,
+  ) {
+    List<String> finalList = [];
+    final List<String> h = homeScore.map((e) => e.text).toList();
+    final List<String> a = awayScore.map((e) => e.text).toList();
+    if (h.length == a.length) {
+      for (int i = 0; i < h.length; i++) {
+        finalList.add('${h[i]}:${a[i]}');
+      }
+    } else {
+      Constants.showToast(
+        msg: 'check your score',
+        color: MainColors.errorColor,
+      );
+      throw Exception();
+    }
+    return finalList;
+  }
+
   //* match CRUD methods
-  Future<void> createMatch() async {}
-  Future<void> getMatches() async {}
-  Future<void> editMatch() async {}
+  Future<void> createMatch() async {
+    emit(SaveMatchLoadingState());
+    final String matchLevel =
+        homeTeam!.level == awayTeam!.level ? homeTeam!.level : 'friendly';
+    final List<String> homeSetterPositions = homeTeamSetter
+        .map((e) => e.text)
+        .toList()
+        .takeWhile((value) => value.isNotEmpty)
+        .toList();
+    final List<String> awaySetterPositions = awayTeamSetter
+        .map((e) => e.text)
+        .toList()
+        .takeWhile((value) => value.isNotEmpty)
+        .toList();
+    final response = await saveMatchUsecase(
+      MatchModel(
+        id: Constants.generateRandomId(),
+        level: matchLevel,
+        homeTeam: homeTeam!,
+        awayTeam: awayTeam!,
+        homeSetters: homeSetterPositions,
+        homeTeamPosition: MatchModel.positionSet(playedHomeTeamPositions),
+        awaySetters: awaySetterPositions,
+        awayTeamPosition: MatchModel.positionSet(playedAwayTeamPositions),
+        score: combinedScore(homeMatchScore, awayMatchScore),
+        dateTime: DateTime.now().toString(),
+      ),
+    );
+    emit(
+      response.fold(
+        (l) => SaveMatchErrorState(error: l.props.toString()),
+        (r) => SaveMatchSuccessState(state: r),
+      ),
+    );
+  }
+
+  Future<void> getMatches() async {
+    final response = await getMatchesUsecase(NoParam());
+    emit(
+      response.fold(
+        (l) => GetMatchesErrorState(error: l.props.toString()),
+        (r) => GetMatchesSuccessState(count: r.length),
+      ),
+    );
+  }
+
+  Future<void> editMatch() async {
+    emit(EditTeamLoadingState());
+    // final response = await editMatchUsecase();
+  }
+
   Future<void> deleteMatch() async {}
 }

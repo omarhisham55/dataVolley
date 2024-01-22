@@ -127,3 +127,81 @@ class SetterState extends MatchLayoutState {
   @override
   List<Object> get props => [isSetterFound];
 }
+
+class SaveMatchLoadingState extends MatchLayoutState {}
+
+class SaveMatchSuccessState extends MatchLayoutState {
+  final bool state;
+
+  const SaveMatchSuccessState({required this.state});
+
+  @override
+  List<Object> get props => [state];
+}
+
+class SaveMatchErrorState extends MatchLayoutState {
+  final String error;
+
+  const SaveMatchErrorState({required this.error});
+
+  @override
+  List<Object> get props => [error];
+}
+
+class EditMatchLoadingState extends MatchLayoutState {}
+
+class EditMatchSuccessState extends MatchLayoutState {
+  final bool state;
+
+  const EditMatchSuccessState({required this.state});
+
+  @override
+  List<Object> get props => [state];
+}
+
+class EditMatchErrorState extends MatchLayoutState {
+  final String error;
+
+  const EditMatchErrorState({required this.error});
+
+  @override
+  List<Object> get props => [error];
+}
+
+class GetMatchesSuccessState extends MatchLayoutState {
+  final int count;
+
+  const GetMatchesSuccessState({required this.count});
+
+  @override
+  List<Object> get props => [count];
+}
+
+class GetMatchesErrorState extends MatchLayoutState {
+  final String error;
+
+  const GetMatchesErrorState({required this.error});
+
+  @override
+  List<Object> get props => [error];
+}
+
+class DeleteMatchLoadingState extends MatchLayoutState {}
+
+class DeleteMatchSuccessState extends MatchLayoutState {
+  final bool state;
+
+  const DeleteMatchSuccessState({required this.state});
+
+  @override
+  List<Object> get props => [state];
+}
+
+class DeleteMatchErrorState extends MatchLayoutState {
+  final String error;
+
+  const DeleteMatchErrorState({required this.error});
+
+  @override
+  List<Object> get props => [error];
+}

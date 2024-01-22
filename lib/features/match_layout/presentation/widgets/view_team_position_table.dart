@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class TeamTable extends StatelessWidget {
   final MatchLayoutCubit manager;
-  final List<List<TextEditingController>> positions;
+  final List<List<String>> positions;
   const TeamTable({super.key, required this.manager, required this.positions});
 
   @override
@@ -43,7 +43,7 @@ class TeamTable extends StatelessWidget {
                   (cellIndex) {
                     if (cellIndex < rowData.length) {
                       return DataCell(Text(
-                        rowData[cellIndex].text,
+                        rowData[cellIndex],
                         style: Theme.of(context).textTheme.bodyLarge,
                       ));
                     } else {
