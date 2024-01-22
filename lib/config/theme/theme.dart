@@ -12,6 +12,7 @@ ThemeData appTheme = ThemeData(
     displayLarge: TextStyle(color: Colors.white),
     displayMedium: TextStyle(color: Colors.white),
     titleSmall: TextStyle(color: Colors.white),
+    titleMedium: TextStyle(color: Colors.white),
     headlineLarge: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
     headlineMedium: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
     headlineSmall: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),

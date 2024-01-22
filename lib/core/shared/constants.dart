@@ -32,4 +32,13 @@ class Constants {
 
     return id;
   }
+
+  static openDialog(BuildContext context, String msgTitle) {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog.adaptive(
+        title: Text(msgTitle),
+      ),
+    );
+  }
 }

@@ -187,6 +187,16 @@ class MatchLayoutCubit extends Cubit<MatchLayoutState> {
       (index) => TextEditingController(),
     ),
   );
+  late final List<List<TextEditingController>> playedHomeTeamPositions =
+      homeTeamPositions
+          .map(
+            (e) => e
+                .takeWhile(
+                  (value) => value.text.isNotEmpty,
+                )
+                .toList(),
+          )
+          .toList();
 
   final List<TextEditingController> homeTeamSetter = List.generate(
     5,
@@ -206,6 +216,17 @@ class MatchLayoutCubit extends Cubit<MatchLayoutState> {
     ),
   );
 
+  late final List<List<TextEditingController>> playedAwayTeamPositions =
+      awayTeamPositions
+          .map(
+            (e) => e
+                .takeWhile(
+                  (value) => value.text.isNotEmpty,
+                )
+                .toList(),
+          )
+          .toList();
+
   //* match score
   final List<TextEditingController> homeMatchScore = List.generate(
     5,
@@ -215,22 +236,15 @@ class MatchLayoutCubit extends Cubit<MatchLayoutState> {
     5,
     (index) => TextEditingController(),
   );
-
+  late final homeTotalWonSets = homeMatchScore.takeWhile(
+    (value) => value.text == '25',
+  );
+  late final awayTotalWonSets = awayMatchScore.takeWhile(
+    (value) => value.text == '25',
+  );
   //* setter in position
-  bool setterFound = false;
-  void setSetters(
-    TextEditingController setter,
-    TextEditingController position,
-  ) {
-    if (position.text == setter.text && setter.text.isNotEmpty) {
-      setterFound = true;
-      return;
-    } else if (setter.text.isEmpty) {
-      setterFound = false;
-    } else {
-      setterFound = false;
-    }
-    emit(SetterState(isSetterFound: setterFound));
+  void setSetters() {
+    emit(SetterState(isSetterFound: DateTime.now().second));
   }
 
   //* match CRUD methods

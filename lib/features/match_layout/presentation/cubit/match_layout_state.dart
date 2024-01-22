@@ -121,7 +121,7 @@ class AddImageErrorState extends MatchLayoutState {
 }
 
 class SetterState extends MatchLayoutState {
-  final bool isSetterFound;
+  final int isSetterFound;
 
   const SetterState({required this.isSetterFound});
   @override

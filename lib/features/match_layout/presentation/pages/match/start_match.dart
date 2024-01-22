@@ -1,4 +1,8 @@
+import 'package:data_volley_match/config/routes/routes.dart';
+import 'package:data_volley_match/core/shared/constants.dart';
+import 'package:data_volley_match/core/shared/widgets.dart';
 import 'package:data_volley_match/core/utils/colors.dart';
+import 'package:data_volley_match/features/match_layout/data/models/team_model.dart';
 import 'package:data_volley_match/features/match_layout/presentation/cubit/match_layout_cubit.dart';
 import 'package:data_volley_match/features/match_layout/presentation/widgets/single_box_input.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +30,7 @@ class StartMatch extends StatelessWidget {
     final MatchLayoutCubit manager = MatchLayoutCubit.get(context);
     FocusScope.of(context).addListener(() {
       if (!FocusScope.of(context).hasFocus) {
-        manager.setSetters(TextEditingController(), TextEditingController());
+        manager.setSetters();
       }
     });
     return PageView.builder(
@@ -35,16 +39,7 @@ class StartMatch extends StatelessWidget {
       itemBuilder: (context, index) => Scaffold(
         // resizeToAvoidBottomInset: false,
         appBar: appbar(index),
-        body: _singlePageView(
-          context,
-          manager,
-          manager.homeTeamPositions[index],
-          manager.awayTeamPositions[index],
-          manager.homeTeamSetter[index],
-          manager.awayTeamSetter[index],
-          manager.homeMatchScore[index],
-          manager.awayMatchScore[index],
-        ),
+        body: _singlePageView(context, manager, index),
       ),
     );
   }
@@ -52,12 +47,7 @@ class StartMatch extends StatelessWidget {
   Widget _singlePageView(
     BuildContext context,
     MatchLayoutCubit manager,
-    List<TextEditingController> homeTeamPositions,
-    List<TextEditingController> awayTeamPositions,
-    TextEditingController homeTeamSetter,
-    TextEditingController awayTeamSetter,
-    TextEditingController homeMatchScore,
-    TextEditingController awayMatchScore,
+    int index,
   ) {
     return SingleChildScrollView(
       child: Column(
@@ -65,16 +55,26 @@ class StartMatch extends StatelessWidget {
         children: [
           _teamReviewPosition(
             context,
-            manager,
-            homeTeamPositions,
-            homeTeamSetter,
+            manager.homeTeam!,
+            manager.homeTeamPositions[index],
+            manager.homeTeamSetter[index],
           ),
-          _finalScore(context, homeMatchScore, awayMatchScore),
+          _finalScore(
+            context,
+            manager.homeMatchScore[index],
+            manager.awayMatchScore[index],
+          ),
           _teamReviewPosition(
             context,
-            manager,
-            awayTeamPositions,
-            awayTeamSetter,
+            manager.awayTeam!,
+            manager.awayTeamPositions[index],
+            manager.awayTeamSetter[index],
+          ),
+          SharedWidgets.filledButton(
+            'End Match',
+            () => Constants.goTo(context, Routes.matchFinalScore),
+            height: 60,
+            margin: const EdgeInsets.all(16),
           ),
         ],
       ),
@@ -83,7 +83,7 @@ class StartMatch extends StatelessWidget {
 
   Widget _teamReviewPosition(
     BuildContext context,
-    MatchLayoutCubit manager,
+    TeamModel team,
     List<TextEditingController> positions,
     TextEditingController teamSetter,
   ) {
@@ -100,7 +100,7 @@ class StartMatch extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        'team name',
+                        team.name,
                         style: Theme.of(context).textTheme.headlineMedium,
                       ),
                     ),
