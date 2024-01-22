@@ -26,27 +26,35 @@ class Routes {
     return {
       initialRoute: (settings) => MaterialPageRoute(
             builder: (context) => const SplashScreen(),
+            settings: settings,
           ),
       createAccount: (settings) => MaterialPageRoute(
             builder: (context) => const CreateAccount(),
+            settings: settings,
           ),
       login: (settings) => MaterialPageRoute(
             builder: (context) => const Login(),
+            settings: settings,
           ),
       allMatches: (settings) => MaterialPageRoute(
             builder: (context) => const AllMatches(),
+            settings: settings,
           ),
       allTeams: (settings) => MaterialPageRoute(
             builder: (context) => const AllTeams(),
+            settings: settings,
           ),
       selectTeams: (settings) => MaterialPageRoute(
             builder: (context) => const SelectTeams(),
+            settings: settings,
           ),
       startMatch: (settings) => MaterialPageRoute(
             builder: (context) => const StartMatch(),
+            settings: settings,
           ),
       matchFinalScore: (settings) => MaterialPageRoute(
             builder: (context) => const MatchFinalScore(),
+            settings: settings,
           ),
     };
   }

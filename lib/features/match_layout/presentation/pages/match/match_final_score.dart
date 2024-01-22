@@ -8,6 +8,49 @@ import 'package:flutter/material.dart';
 class MatchFinalScore extends StatelessWidget {
   const MatchFinalScore({super.key});
 
+  _openFreindlyDialog(context) {
+    return Constants.openDialog(
+      context: context,
+      msgTitle: 'Friendly Match?',
+      msgContent: 'Is this a friendly match?',
+      actions: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: SharedWidgets.filledButton(
+            'Yes',
+            () => _openVideoDialog(context),
+            height: 50,
+            borderRadius: 12,
+          ),
+        ),
+        SharedWidgets.outlinedButton('No', () => _openVideoDialog(context)),
+      ],
+    );
+  }
+
+  _openVideoDialog(context) {
+    return Constants.openDialog(
+      context: context,
+      msgTitle: 'Match Captured?',
+      msgContent: 'Did you record the match?',
+      actions: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: SharedWidgets.filledButton(
+            'Yes',
+            () => Constants.goBackTo(context, Routes.createAccount),
+            height: 50,
+            borderRadius: 12,
+          ),
+        ),
+        SharedWidgets.outlinedButton(
+          'No',
+          () => Constants.goBackTo(context, Routes.createAccount),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     MatchLayoutCubit manager = MatchLayoutCubit.get(context);
@@ -23,7 +66,7 @@ class MatchFinalScore extends StatelessWidget {
                 _viewSets(context, manager),
                 SharedWidgets.filledButton(
                   'Save Match',
-                  () => Constants.openDialog(context, 'Friendly Match?'),
+                  () => _openFreindlyDialog(context),
                   height: 60,
                   margin: const EdgeInsets.all(16),
                 ),
