@@ -27,7 +27,9 @@ class MyApp extends StatelessWidget {
           create: (context) => di.injection<RegistrationCubit>(),
         ),
         BlocProvider(
-          create: (context) => di.injection<MatchLayoutCubit>()..getTeams(),
+          create: (context) => di.injection<MatchLayoutCubit>()
+            ..getTeams()
+            ..getMatches(),
         ),
       ],
       child: MaterialApp(

@@ -281,7 +281,7 @@ class MatchLayoutCubit extends Cubit<MatchLayoutState> {
   }
 
   //* match CRUD methods
-  Future<void> createMatch() async {
+  Future<void> saveMatch() async {
     emit(SaveMatchLoadingState());
     final String matchLevel =
         homeTeam!.level == awayTeam!.level ? homeTeam!.level : 'friendly';
@@ -309,6 +309,7 @@ class MatchLayoutCubit extends Cubit<MatchLayoutState> {
         dateTime: DateTime.now().toString(),
       ),
     );
+    getMatches();
     emit(
       response.fold(
         (l) => SaveMatchErrorState(error: l.props.toString()),
