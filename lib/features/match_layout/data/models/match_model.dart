@@ -1,3 +1,4 @@
+import 'package:data_volley_match/features/match_layout/data/models/team_model.dart';
 import 'package:data_volley_match/features/match_layout/domain/entities/match.dart';
 
 class MatchModel extends Match {
@@ -12,15 +13,15 @@ class MatchModel extends Match {
     required super.awayTeamPosition,
     required super.score,
     required super.dateTime,
-    super.isFriendly,
-    super.videoExist,
+    required super.isFriendly,
+    required super.videoExist,
   });
 
   factory MatchModel.fromJson(Map<String, dynamic> json) => MatchModel(
-        id: json['id'],
+        id: json['_id'],
         level: json['level'],
-        homeTeam: json['homeTeam'],
-        awayTeam: json['awayTeam'],
+        homeTeam: TeamModel.fromJson(json['homeTeam']),
+        awayTeam: TeamModel.fromJson(json['awayTeam']),
         homeSetters: json['homeSetters'],
         homeTeamPosition: json['homeTeamPosition'],
         awaySetters: json['awaySetters'],
@@ -43,10 +44,10 @@ class MatchModel extends Match {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
+      '_id': id,
       'level': level,
-      'homeTeam': homeTeam,
-      'awayTeam': awayTeam,
+      'homeTeam': homeTeam.toMap(),
+      'awayTeam': awayTeam.toMap(),
       'homeSetters': homeSetters,
       'homeTeamPosition': homeTeamPosition,
       'awaySetters': awaySetters,

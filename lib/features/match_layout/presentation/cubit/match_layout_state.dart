@@ -9,6 +9,10 @@ abstract class MatchLayoutState extends Equatable {
 
 class MatchLayoutInitial extends MatchLayoutState {}
 
+class ChangeFriendly extends MatchLayoutState {}
+
+class ChangeVideoState extends MatchLayoutState {}
+
 class ClearFormState extends MatchLayoutState {}
 
 class CreateTeamLoadingState extends MatchLayoutState {}

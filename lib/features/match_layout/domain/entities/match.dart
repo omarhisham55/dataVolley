@@ -26,8 +26,8 @@ class Match extends Equatable {
     required this.awayTeamPosition,
     required this.score,
     required this.dateTime,
-    this.isFriendly = false,
-    this.videoExist = false,
+    required this.isFriendly,
+    required this.videoExist,
   });
   @override
   List<Object?> get props => [level, homeTeam, awayTeam];

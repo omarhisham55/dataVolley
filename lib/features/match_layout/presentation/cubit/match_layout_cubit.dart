@@ -254,6 +254,20 @@ class MatchLayoutCubit extends Cubit<MatchLayoutState> {
   late final awayTotalWonSets = awayMatchScore.takeWhile(
     (value) => value.text == '25',
   );
+
+  late final String matchLevel =
+      homeTeam!.level == awayTeam!.level ? homeTeam!.level : 'friendly';
+  late final List<String> homeSetterPositions = homeTeamSetter
+      .map((e) => e.text)
+      .toList()
+      .takeWhile((value) => value.isNotEmpty)
+      .toList();
+  late final List<String> awaySetterPositions = awayTeamSetter
+      .map((e) => e.text)
+      .toList()
+      .takeWhile((value) => value.isNotEmpty)
+      .toList();
+
   //* setter in position
   void setSetters() {
     emit(SetterState(isSetterFound: DateTime.now().second));
@@ -281,20 +295,10 @@ class MatchLayoutCubit extends Cubit<MatchLayoutState> {
   }
 
   //* match CRUD methods
+  bool isFriendly = false;
+  bool isVideoCaptured = false;
   Future<void> saveMatch() async {
     emit(SaveMatchLoadingState());
-    final String matchLevel =
-        homeTeam!.level == awayTeam!.level ? homeTeam!.level : 'friendly';
-    final List<String> homeSetterPositions = homeTeamSetter
-        .map((e) => e.text)
-        .toList()
-        .takeWhile((value) => value.isNotEmpty)
-        .toList();
-    final List<String> awaySetterPositions = awayTeamSetter
-        .map((e) => e.text)
-        .toList()
-        .takeWhile((value) => value.isNotEmpty)
-        .toList();
     final response = await saveMatchUsecase(
       MatchModel(
         id: Constants.generateRandomId(),
@@ -307,15 +311,29 @@ class MatchLayoutCubit extends Cubit<MatchLayoutState> {
         awayTeamPosition: MatchModel.positionSet(playedAwayTeamPositions),
         score: combinedScore(homeMatchScore, awayMatchScore),
         dateTime: DateTime.now().toString(),
+        isFriendly: isFriendly,
+        videoExist: isVideoCaptured,
       ),
     );
     getMatches();
+    isFriendly = false;
+    isVideoCaptured = false;
     emit(
       response.fold(
         (l) => SaveMatchErrorState(error: l.props.toString()),
         (r) => SaveMatchSuccessState(state: r),
       ),
     );
+  }
+
+  void changeFriendly() {
+    isFriendly = true;
+    emit(ChangeFriendly());
+  }
+
+  void changeVideoState() {
+    isFriendly = true;
+    emit(ChangeVideoState());
   }
 
   Future<void> getMatches() async {

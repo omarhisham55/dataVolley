@@ -4,59 +4,61 @@ import 'package:flutter/material.dart';
 class TeamTable extends StatelessWidget {
   final MatchLayoutCubit manager;
   final List<List<String>> positions;
-  const TeamTable({super.key, required this.manager, required this.positions});
+  final List<String> setterPosition;
+  const TeamTable({
+    super.key,
+    required this.manager,
+    required this.positions,
+    required this.setterPosition,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: Column(
-            children: List.generate(
-              positions.length,
-              (index) => Padding(
-                padding: const EdgeInsets.symmetric(vertical: 5),
-                child: Text(
-                  'set ${index + 1}',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-              ),
-            ),
-          ),
+    return DataTable(
+      headingRowHeight: 10,
+      columnSpacing: 20,
+      columns: List.generate(
+        7,
+        (index) => DataColumn(
+          label: Container(),
         ),
-        Expanded(
-          flex: 4,
-          child: DataTable(
-            columnSpacing: 0,
-            columns: List.generate(
-              6,
-              (index) => DataColumn(
-                label: Container(),
-              ),
-            ),
-            rows: List.generate(
-              5,
-              (index) {
-                final rowData = positions[index];
-                final cells = List.generate(
-                  6,
-                  (cellIndex) {
-                    if (cellIndex < rowData.length) {
-                      return DataCell(Text(
-                        rowData[cellIndex],
-                        style: Theme.of(context).textTheme.bodyLarge,
-                      ));
-                    } else {
-                      return const DataCell(Text(''));
-                    }
-                  },
+      ),
+      rows: List.generate(
+        5,
+        (index) {
+          final rowData = positions[index];
+          final cells = List.generate(
+            7,
+            (cellIndex) {
+              if (cellIndex == 0) {
+                return DataCell(
+                  Text(
+                    'set ${index + 1}',
+                    style: Theme.of(context).textTheme.titleSmall,
+                    maxLines: 1,
+                  ),
                 );
-                return DataRow(cells: cells);
-              },
-            ),
-          ),
-        ),
-      ],
+              }
+              if (cellIndex < rowData.length) {
+                return DataCell(
+                  CircleAvatar(
+                    backgroundColor: rowData[cellIndex] == setterPosition[index]
+                        ? Colors.white
+                        : Colors.transparent,
+                    child: Text(
+                      rowData[cellIndex],
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                  ),
+                );
+              } else {
+                return const DataCell(Text(''));
+              }
+            },
+          );
+          return DataRow(cells: cells);
+        },
+      ),
     );
   }
 }

@@ -58,7 +58,7 @@ class MatchFirestoreConsumer implements MatchFirestoreManager {
 
   @override
   Future<Map<String, List<MatchModel>>> getAllLevelMatch() async {
-    List<String> levels = ['15', '17', '19', '1st'];
+    List<String> levels = ['15', '17', '19', '1st', 'friendly'];
     for (var element in levels) {
       final List<MatchModel> level = await getSingleLevelMatch(level: element);
       matches[element] = level;

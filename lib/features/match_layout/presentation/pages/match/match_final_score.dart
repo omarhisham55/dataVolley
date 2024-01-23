@@ -4,11 +4,12 @@ import 'package:data_volley_match/core/shared/widgets.dart';
 import 'package:data_volley_match/features/match_layout/presentation/cubit/match_layout_cubit.dart';
 import 'package:data_volley_match/features/match_layout/presentation/widgets/view_team_position_table.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MatchFinalScore extends StatelessWidget {
   const MatchFinalScore({super.key});
 
-  _openFreindlyDialog(context) {
+  _openFreindlyDialog(BuildContext context, MatchLayoutCubit manager) {
     return Constants.openDialog(
       context: context,
       msgTitle: 'Friendly Match?',
@@ -18,17 +19,21 @@ class MatchFinalScore extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 10),
           child: SharedWidgets.filledButton(
             'Yes',
-            () => _openVideoDialog(context),
+            () {
+              manager.changeFriendly();
+              return _openVideoDialog(context, manager);
+            },
             height: 50,
             borderRadius: 12,
           ),
         ),
-        SharedWidgets.outlinedButton('No', () => _openVideoDialog(context)),
+        SharedWidgets.outlinedButton(
+            'No', () => _openVideoDialog(context, manager)),
       ],
     );
   }
 
-  _openVideoDialog(context) {
+  _openVideoDialog(BuildContext context, MatchLayoutCubit manager) {
     return Constants.openDialog(
       context: context,
       msgTitle: 'Match Captured?',
@@ -38,14 +43,17 @@ class MatchFinalScore extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 10),
           child: SharedWidgets.filledButton(
             'Yes',
-            () => Constants.goBackTo(context, Routes.createAccount),
+            () async {
+              manager.changeVideoState();
+              manager.saveMatch();
+            },
             height: 50,
             borderRadius: 12,
           ),
         ),
         SharedWidgets.outlinedButton(
           'No',
-          () => Constants.goBackTo(context, Routes.createAccount),
+          () => manager.saveMatch(),
         ),
       ],
     );
@@ -54,28 +62,39 @@ class MatchFinalScore extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     MatchLayoutCubit manager = MatchLayoutCubit.get(context);
-    return SafeArea(
-      child: Scaffold(
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              children: [
-                _title(context, manager),
-                _score(context, manager),
-                _viewSets(context, manager),
-                SharedWidgets.filledButton(
-                  'Save Match',
-                  () => _openFreindlyDialog(context),
-                  height: 60,
-                  margin: const EdgeInsets.all(16),
-                ),
-              ],
+    return BlocConsumer<MatchLayoutCubit, MatchLayoutState>(
+        listener: (context, state) {
+      if (state is SaveMatchSuccessState) {
+        if (state.state) {
+          Constants.goBackTo(context, Routes.createAccount);
+        }
+      }
+    }, builder: (context, state) {
+      return SafeArea(
+        child: Scaffold(
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  if (state is SaveMatchLoadingState)
+                    const LinearProgressIndicator(),
+                  _title(context, manager),
+                  _score(context, manager),
+                  _viewSets(context, manager),
+                  SharedWidgets.filledButton(
+                    'Save Match',
+                    () => _openFreindlyDialog(context, manager),
+                    height: 60,
+                    margin: const EdgeInsets.all(16),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   Widget _title(BuildContext context, MatchLayoutCubit manager) {
@@ -118,6 +137,7 @@ class MatchFinalScore extends StatelessWidget {
           height: 30,
           child: ListView.builder(
             shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
             scrollDirection: Axis.horizontal,
             itemCount: manager.homeMatchScore.length,
             itemBuilder: (context, index) => Padding(
@@ -140,20 +160,32 @@ class MatchFinalScore extends StatelessWidget {
     BuildContext context,
     MatchLayoutCubit manager,
   ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          manager.homeTeam!.name,
-          style: Theme.of(context).textTheme.headlineSmall,
-        ),
-        TeamTable(manager: manager, positions: manager.playedHomeTeamPositions),
-        Text(
-          manager.awayTeam!.name,
-          style: Theme.of(context).textTheme.headlineSmall,
-        ),
-        TeamTable(manager: manager, positions: manager.playedAwayTeamPositions),
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 30),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            manager.homeTeam!.name,
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
+          TeamTable(
+            manager: manager,
+            positions: manager.playedHomeTeamPositions,
+            setterPosition: manager.homeSetterPositions,
+          ),
+          Text(
+            manager.awayTeam!.name,
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
+          TeamTable(
+            manager: manager,
+            positions: manager.playedAwayTeamPositions,
+            setterPosition: manager.awaySetterPositions,
+          ),
+        ],
+      ),
     );
   }
 }
