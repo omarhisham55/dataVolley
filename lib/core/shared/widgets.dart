@@ -1,4 +1,7 @@
 import 'package:data_volley_match/core/utils/colors.dart';
+import 'package:data_volley_match/features/match_layout/data/models/match_model.dart';
+import 'package:data_volley_match/features/match_layout/presentation/cubit/match_layout_cubit.dart';
+import 'package:data_volley_match/features/match_layout/presentation/widgets/view_team_position_table.dart';
 import 'package:flutter/material.dart';
 
 class SharedWidgets {
@@ -58,6 +61,80 @@ class SharedWidgets {
           validator: validate,
         ),
       );
+
+  static Widget score({
+    required BuildContext context,
+    required MatchLayoutCubit manager,
+    MatchModel? match,
+  }) {
+    return Column(
+      children: [
+        Text(
+          manager.getScoreFromMatch(match?.score) ??
+              '${manager.homeTotalWonSets.length} : ${manager.awayTotalWonSets.length}',
+          style: Theme.of(context).textTheme.headlineMedium,
+        ),
+        SizedBox(
+          height: 30,
+          width: double.infinity,
+          child: ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            scrollDirection: Axis.horizontal,
+            itemCount: manager.homeMatchScore.length,
+            itemBuilder: (context, index) => Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: Text(
+                match != null
+                    ? '${match.score[index].split(':')[0]} : ${match.score[index].split(':')[1]}'
+                    : manager.homeMatchScore[index].text.isNotEmpty &&
+                            manager.awayMatchScore[index].text.isNotEmpty
+                        ? '${manager.homeMatchScore[index].text} : ${manager.awayMatchScore[index].text}'
+                        : '',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  static Widget viewSets({
+    required BuildContext context,
+    required MatchLayoutCubit manager,
+    MatchModel? match,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 30),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            match?.homeTeam.name ?? manager.homeTeam!.name,
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
+          TeamTable(
+            manager: manager,
+            positions: match?.homeTeamPosition?.values.toList() ??
+                manager.playedHomeTeamPositions,
+            setterPosition: match?.homeSetters ?? manager.homeSetterPositions,
+          ),
+          Text(
+            match?.awayTeam.name ?? manager.awayTeam!.name,
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
+          TeamTable(
+            manager: manager,
+            positions: match?.awayTeamPosition?.values.toList() ??
+                manager.playedAwayTeamPositions,
+            setterPosition: match?.awaySetters ?? manager.awaySetterPositions,
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class GoogleBtn extends StatelessWidget {

@@ -32,7 +32,7 @@ class MatchModel extends Match {
         videoExist: json['videoExist'],
       );
 
-  static Map<String, List<String>> positionSet(List<List<String>?> positions) {
+  static Map<String, List<dynamic>> positionSet(List<List<String>?> positions) {
     return {
       'set 1': positions[0] ?? [],
       'set 2': positions[1] ?? [],

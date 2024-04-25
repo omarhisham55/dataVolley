@@ -18,6 +18,7 @@ ThemeData appTheme = ThemeData(
     headlineSmall: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
     labelLarge: TextStyle(color: Colors.grey),
     bodyLarge: TextStyle(color: Colors.grey),
+    bodySmall: TextStyle(color: Colors.grey),
   ),
   dropdownMenuTheme: const DropdownMenuThemeData(
     menuStyle: MenuStyle(

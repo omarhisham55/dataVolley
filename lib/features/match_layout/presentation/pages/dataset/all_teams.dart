@@ -15,9 +15,9 @@ class AllTeams extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final MatchLayoutCubit manager = MatchLayoutCubit.get(context);
     return BlocBuilder<MatchLayoutCubit, MatchLayoutState>(
       builder: (context, state) {
+        final MatchLayoutCubit manager = MatchLayoutCubit.get(context);
         return ConditionalBuilder(
           condition: manager.allTeams.isNotEmpty,
           fallback: (context) => const Center(
@@ -33,8 +33,8 @@ class AllTeams extends StatelessWidget {
               ),
               panel: _editTeamPanel(context, manager),
               body: Tabs(
-                length: manager.levels.length,
-                tabs: manager.levels,
+                length: manager.teamlevels.length,
+                tabs: manager.teamlevels,
                 tabsBody: manager.allTeams.entries
                     .map(
                       (value) => _viewTeamLevel(context, value.value, manager),

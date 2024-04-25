@@ -44,11 +44,15 @@ class MatchLayoutCubit extends Cubit<MatchLayoutState> {
   final PanelController editTeamPanelController = PanelController();
   final GlobalKey<FormState> editTeamFormKey = GlobalKey<FormState>();
   final TextEditingController editTeamNameController = TextEditingController();
+  final PanelController editMatchPanelController = PanelController();
+  final GlobalKey<FormState> editMatchFormKey = GlobalKey<FormState>();
   String level = '';
   String? createdTeamImage;
   String? editedTeamImage;
   Map<String, List<TeamModel>> allTeams = {};
-  late List<String> levels = ['15', '17', '19', '1st'];
+  Map<String, List<MatchModel>> allMatches = {};
+  late List<String> teamlevels = ['15', '17', '19', '1st'];
+  late List<String> matchlevels = ['15', '17', '19', '1st', 'friendly'];
   List<TeamModel>? combinedLevels;
 
   TeamModel? homeTeam;
@@ -341,7 +345,10 @@ class MatchLayoutCubit extends Cubit<MatchLayoutState> {
     emit(
       response.fold(
         (l) => GetMatchesErrorState(error: l.props.toString()),
-        (r) => GetMatchesSuccessState(count: r.length),
+        (r) {
+          allMatches = r;
+          return GetMatchesSuccessState(count: r.length);
+        },
       ),
     );
   }
@@ -351,5 +358,40 @@ class MatchLayoutCubit extends Cubit<MatchLayoutState> {
     // final response = await editMatchUsecase();
   }
 
-  Future<void> deleteMatch() async {}
+  Future<void> deleteMatch() async {
+    emit(DeleteTeamLoadingState());
+    final response = await deleteMatchUsecase(selectedMatch);
+    emit(
+      response.fold(
+        (l) => DeleteMatchErrorState(error: l.props.toString()),
+        (r) => DeleteMatchSuccessState(state: r),
+      ),
+    );
+  }
+
+  late MatchModel selectedMatch;
+  bool isMatchEditOpen = false;
+  String? getScoreFromMatch(List<dynamic>? matchScore) {
+    List<String> homeList = [];
+    List<String> awayList = [];
+    for (var element in matchScore ?? []) {
+      if (element is String) {
+        // if (int.parse(element.split(':')[0]) > 25 &&
+        //     int.parse(element.split(':')[1]) > 25) {
+        //   if (int.parse(element.split(':')[0]) >
+        //       int.parse(element.split(':')[1])) {
+        //     homeList.add(element.split(':')[0]);
+        //   } else {
+        //     awayList.add(element.split(':')[1]);
+        //   }
+        // } else
+        if (element.split(':')[0] == '25') {
+          homeList.add(element.split(':')[0]);
+        } else if (element.split(':')[1] == '25') {
+          awayList.add(element.split(':')[1]);
+        }
+      }
+    }
+    return '${homeList.length} - ${awayList.length}';
+  }
 }

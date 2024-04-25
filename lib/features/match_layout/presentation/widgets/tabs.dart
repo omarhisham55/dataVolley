@@ -1,24 +1,26 @@
 import 'package:data_volley_match/core/utils/colors.dart';
 import 'package:flutter/material.dart';
 
-class Tabs extends StatefulWidget {
+class Tabs<T> extends StatefulWidget {
   final int length;
   final List<String> tabs;
   final List<Widget> tabsBody;
   final List<Widget>? actions;
+  final bool? isScrollable;
   const Tabs({
     super.key,
     required this.length,
     required this.tabs,
     required this.tabsBody,
     this.actions,
+    this.isScrollable = false,
   });
 
   @override
-  State<Tabs> createState() => _TabsState();
+  State<Tabs<T>> createState() => _TabsState<T>();
 }
 
-class _TabsState extends State<Tabs> with SingleTickerProviderStateMixin {
+class _TabsState<T> extends State<Tabs<T>> with SingleTickerProviderStateMixin {
   late final TabController _controller;
 
   @override
@@ -41,6 +43,7 @@ class _TabsState extends State<Tabs> with SingleTickerProviderStateMixin {
         actions: widget.actions,
         bottom: TabBar(
           controller: _controller,
+          isScrollable: widget.isScrollable!,
           tabs: widget.tabs
               .map(
                 (tab) => Tab(

@@ -84,7 +84,7 @@ class TeamManagerPanel extends StatelessWidget {
                   onChanged: (value) {
                     manager.level = value!;
                   },
-                  items: manager.levels,
+                  items: manager.teamlevels,
                   emptyListText: 'No levels found',
                 ),
                 ConditionalBuilder(

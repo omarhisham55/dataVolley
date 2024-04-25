@@ -6,11 +6,11 @@ class Match extends Equatable {
   final String level;
   final TeamModel homeTeam;
   final TeamModel awayTeam;
-  final List<String> homeSetters;
-  final Map<String, List<String>?>? homeTeamPosition;
-  final List<String> awaySetters;
-  final Map<String, List<String>?>? awayTeamPosition;
-  final List<String> score;
+  final List<dynamic> homeSetters;
+  final Map<String, dynamic>? homeTeamPosition;
+  final List<dynamic> awaySetters;
+  final Map<String, dynamic>? awayTeamPosition;
+  final List<dynamic> score;
   final String dateTime;
   final bool isFriendly;
   final bool videoExist;

@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 class TeamTable extends StatelessWidget {
   final MatchLayoutCubit manager;
-  final List<List<String>> positions;
-  final List<String> setterPosition;
+  final List<dynamic> positions;
+  final List<dynamic> setterPosition;
   const TeamTable({
     super.key,
     required this.manager,
@@ -40,6 +40,9 @@ class TeamTable extends StatelessWidget {
                 );
               }
               if (cellIndex < rowData.length) {
+                while (setterPosition.length < rowData.length) {
+                  setterPosition.add(null);
+                }
                 return DataCell(
                   CircleAvatar(
                     backgroundColor: rowData[cellIndex] == setterPosition[index]
